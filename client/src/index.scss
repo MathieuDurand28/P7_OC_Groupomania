@@ -1,0 +1,42 @@
+/*
+* GENERAL STYLE
+*/
+
+/**
+  FONT
+ */
+html{
+  font-family: 'Lato', sans-serif;
+  height: 100vh;
+  background-color: #4E5166;
+}
+.font-15{
+  font-size: 15px;
+}
+.font-25{
+  font-size: 25px;
+}
+.font-50{
+  font-size: 50px;
+}
+
+/**
+GENERAL COMPONENTS
+ */
+
+.button{
+  background-color: #FFD7D7;
+  font-family: 'Lato', sans-serif;
+  font-size: 24px;
+  border-radius: 15px;
+  border-color: #FFD7D7;
+}
+
+.input-login{
+  background-color: #FFD7D7;
+  font-family: 'Lato', sans-serif;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 15px;
+  border-color: #FFD7D7;
+}

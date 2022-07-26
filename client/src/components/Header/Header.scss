@@ -1,0 +1,21 @@
+.head{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FD2D01;
+  color: whitesmoke;
+  height: 90px;
+  width: 100%;
+  margin-bottom: 50px;
+  border-radius: 10px;
+  img{
+    max-width: 250px;
+  }
+  p:first-child{
+    margin-left: 25px;
+  }
+  p:last-child{
+    margin-right: 25px;
+  }
+}

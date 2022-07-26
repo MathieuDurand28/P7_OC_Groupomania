@@ -8,7 +8,7 @@ function Login() {
   const onSubmit = (data) => {
 
     if (data.email.length <= 0){
-      setErrorMessages({ name: "email", message: "l'E-mail ne peut être vide" });
+      setErrorMessages({ name: "email", message: "l'Email ne peut être vide" });
     }
     if (data.password.length <= 0){
       setErrorMessages({ name: "password", message: "Le mot de passe ne peut être vide" });

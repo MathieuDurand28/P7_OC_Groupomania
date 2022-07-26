@@ -46,6 +46,7 @@ function Content() {
             <aside className="aside"></aside>
         </div>
     );
+
 }
 
 export default Content;

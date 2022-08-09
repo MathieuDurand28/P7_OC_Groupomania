@@ -1,7 +1,7 @@
 import {useForm} from 'react-hook-form'
 import './Login.scss';
 import {useState} from "react";
-import {authentification} from "../../services/auth"
+import {getSignUp, getLogin} from "../../services/auth"
 
 function Login() {
   const {register, handleSubmit} = useForm()
@@ -15,7 +15,7 @@ function Login() {
         setErrorMessages({ name: "password", message: "Le mot de passe ne peut être vide." });
       } else {
         if (modeForm.login){
-          authentification(data).then(r => {
+          getLogin(data).then(r => {
             if (!r.auth){
               setErrorMessages({ name: "auth", message: r.message });
             } else {
@@ -23,7 +23,13 @@ function Login() {
             }
           })
         } else if (modeForm.signup){
-          alert('signUP')
+          getSignUp(data).then(r => {
+            if (!r.auth){
+              setErrorMessages({ name: "auth", message: r.message });
+            } else {
+              setErrorMessages({})
+            }
+          })
         }
     }
   }

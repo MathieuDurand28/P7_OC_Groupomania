@@ -3,29 +3,15 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const SQLITE = require('./database/database')
 require('dotenv').config()
-const { Sequelize } = require('sequelize');
-
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database/groupomania_db.sqlite'
-});
-
-sequelize
-  .authenticate()
-  .then(function(err) {
-    console.log("connect to database: ", err)
-    //sequelize.sync({force: true})
-  })
-  .catch(function(err) {
-    console.log("Unable to connect to database: ", err)
-  });
 
   
 
   const indexRouter = require('./routes/index')
   const usersRouter = require('./routes/users');
   const { dirname } = require('path');
+const { Database } = require('sqlite3');
 
   const app = express();
 
@@ -39,6 +25,15 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
+
+try {
+  SQLITE.sequelize.authenticate()
+  .then(() => {
+    SQLITE.sequelize.sync()
+  })
+} catch (error) {
+  console.error('Unable to connect to the database:', error)
+}
 
 app.use(logger('dev'));
 app.use(express.json());

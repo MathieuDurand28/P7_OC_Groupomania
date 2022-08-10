@@ -1,11 +1,10 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:")
+const Database = require('../database/database')
 
-module.exports = (sequelize) => {
-    return sequelize.define("User", {
+
+const User = Database.sequelize.define("User", {
     email:{
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
     },
     password:{
@@ -17,9 +16,7 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: false
     },
-    underscored: true
+    //underscored: true
     });
-}
 
-console.log(sequelize.model.User)
-
+exports.User = User

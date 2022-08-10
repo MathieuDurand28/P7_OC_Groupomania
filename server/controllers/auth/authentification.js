@@ -1,9 +1,7 @@
 const bcrypt = require('bcrypt');
-const { Sequelize} = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:");
-const User = require('../../models/User')(sequelize,Sequelize);
+const Database = require('../../database/database')
+const {User} = require('../../models/User');
 
-User.sync({force: true})
 
 exports.login =  function(req,res){
 const data = req.body
@@ -12,9 +10,8 @@ const check_email    = typeof (data.email) !== 'undefined'
 const check_password = typeof (data.password) !== 'undefined'
 
 if (check_email && check_password){
-    const all = User.findAll()
-
-    res.status(200).json({message: all})
+    User.findAll()
+    .then((t) => {res.status(200).json({message: t})})
 } else {
     res.status(401).json({message: `Une erreur est survenue`})
 }
@@ -26,32 +23,29 @@ exports.signUp =  async function (req,res){
     const check_email    = typeof (data.email) !== 'undefined'
     const check_password = typeof (data.password) !== 'undefined'
 
-
     if (check_email && check_password){
+        const encryptage = await encrypt(data.password).then((r) => {return r})
         const mail = data.email
-        const pass = "hash"
-        try{
-            const user = await User.create({
-                email: mail,
-                password: pass,
-                isAdmin: true
+        try {
+            await Database.sequelize.authenticate()
+            .then(() => {
+                const user = User.create({
+                    email: mail,
+                    password: encryptage,
+                    isAdmin: true
+                })
+                //Database.sequelize.sync()
             })
-        }
-        catch{
-            res.status(200).json({success: false, err: "erreur"}) 
-        }
+          } catch (error) {
+            console.error('Unable to connect to the database:', error)
+          }
         
-        res.status(200).json({success: true, message: ""})
+        res.status(200).json({success: true, message: 'pass'})
     } else {
         res.status(401).json({message: `Une erreur est survenue lors de la création du compte.`})
     }
 }
 
-const encrypt = () => {
-    bcrypt.genSalt(10, function(err, salt) {
-        const hasher = () => bcrypt.hash(req.body.password, salt, function (err, hash) {
-            return hash
-        });
-        return hasher
-    });
+function encrypt(password){
+    return bcrypt.hash(password, 10)
 }

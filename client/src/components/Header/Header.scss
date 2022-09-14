@@ -6,7 +6,6 @@
   background-color: #FD2D01;
   color: whitesmoke;
   height: 90px;
-  width: 100%;
   margin-bottom: 50px;
   border-radius: 10px;
   img{
@@ -17,5 +16,11 @@
   }
   p:last-child{
     margin-right: 25px;
+  }
+  .quit_btn{
+    cursor: pointer;
+    &:hover{
+      color: #FFD7D7;
+    }
   }
 }

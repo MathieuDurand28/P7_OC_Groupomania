@@ -1,12 +1,16 @@
 import {useForm} from 'react-hook-form'
 import './Login.scss';
 import {useState} from "react";
-import {getSignUp, getLogin} from "../../services/auth"
+import {GetSignUp, GetLogin} from "../../services/auth"
+import {useDispatch} from "react-redux";
+import {add_user} from "../../services/features/user/userSlice";
+
 
 function Login() {
   const {register, handleSubmit} = useForm()
   const [errorMessages, setErrorMessages] = useState({});
   const [modeForm, updateModeForm] = useState({message: "Se connecter", login: true, signup: false})
+  const dispatch = useDispatch()
 
   const onSubmit = (data) => {
     if (data.email.length <= 0){
@@ -15,18 +19,20 @@ function Login() {
         setErrorMessages({ name: "password", message: "Le mot de passe ne peut être vide." });
       } else {
         if (modeForm.login){
-          getLogin(data).then(r => {
+          GetLogin(data).then(r => {
             if (!r.auth){
               setErrorMessages({ name: "auth", message: r.message });
             } else {
+              dispatch(add_user(r))
               setErrorMessages({})
             }
           })
         } else if (modeForm.signup){
-          getSignUp(data).then(r => {
+          GetSignUp(data).then(r => {
             if (!r.auth){
               setErrorMessages({ name: "auth", message: r.message });
             } else {
+              dispatch(add_user(r))
               setErrorMessages({})
             }
           })

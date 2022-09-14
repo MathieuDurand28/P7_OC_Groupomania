@@ -16,7 +16,6 @@ if (check_email && check_password){
         const password_checker = await bcrypt.compare(data.password , login.password);
         if (password_checker){
             res.status(200).json({
-                auth:true, 
                 email: data.email,
                 user_id: login.id,
                 token: jwt.sign(
@@ -28,7 +27,7 @@ if (check_email && check_password){
                     process.env.TOKEN_KEY,
                     { expiresIn: '24h' }
                   ),
-                message: "Compte authentifié"})
+            })
         } else {
             res.status(200).json({message: `Identifiants incorrects. Merci de réessayer.`})
         }
@@ -64,10 +63,9 @@ exports.signUp =  async function (req,res){
               }
               const new_user = await User.findOne({ where: { email: data.email } })
               res.status(200).json({
-                auth:true, 
                 email: new_user.email,
                 user_id: new_user.id,
-                message: "Compte créé"})
+                })
         } else {
             res.status(200).json({success: false, message: 'Un compte ayant cette adresse mail existe déjà.'})
         }

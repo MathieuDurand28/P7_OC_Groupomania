@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { token } = require('morgan')
 require('dotenv').config()
 
 /**
@@ -15,11 +16,19 @@ module.exports = (req, res, next) => {
     const userId = decodedToken.userId
     req.auth = { userId }
     if (req.body.userId && req.body.userId !== userId){
-      throw 'UserId non valable !'
+      res.status(401).json({
+        authentified: false,
+        message: "User non authentifié",
+        error_type: "unauthorized"
+      })
     } else {
       next()
     }
   } catch (error){
-    res.status(200).json({authentified: false, message: error | "Requête non authentifiée !"})
+    res.status(401).json({
+      authentified: false,
+      message: "User non authentifié",
+      error_type: "catch"
+     })
   }
 }

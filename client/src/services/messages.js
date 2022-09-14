@@ -16,3 +16,9 @@ export async function getMessages(){
 export async function postMessages(payload){
     await axios.post('http://localhost:3000/api/msg/postMessages', payload)
 }
+
+export async function deleteMessage(payload){
+    await axios.post('http://localhost:3000/api/msg/deleteMessage', payload)
+}
+
+

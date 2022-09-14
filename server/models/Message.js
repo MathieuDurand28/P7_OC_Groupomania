@@ -15,7 +15,7 @@ const Message = Database.sequelize.define("Message", {
         allowNull: false,
         defaultValue: 0
     },
-    Dislike:{
+    userId:{
         type: DataTypes.NUMBER,
         allowNull: false,
         defaultValue: 0

@@ -29,6 +29,13 @@
       border-bottom: 1px solid whitesmoke;
       font-weight: bold;
       color: whitesmoke;
+      .suppress{
+        color: pink;
+        cursor: pointer;
+        &:hover{
+          color: white;
+        }
+      }
     }
     .card-content{
       color: whitesmoke;

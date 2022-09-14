@@ -20,7 +20,7 @@ function Login() {
       } else {
         if (modeForm.login){
           GetLogin(data).then(r => {
-            if (!r.auth){
+            if (!r.token){
               setErrorMessages({ name: "auth", message: r.message });
             } else {
               dispatch(add_user(r))
@@ -29,7 +29,7 @@ function Login() {
           })
         } else if (modeForm.signup){
           GetSignUp(data).then(r => {
-            if (!r.auth){
+            if (!r.token){
               setErrorMessages({ name: "auth", message: r.message });
             } else {
               dispatch(add_user(r))

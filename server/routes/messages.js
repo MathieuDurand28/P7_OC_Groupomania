@@ -7,6 +7,8 @@ const authentified = require('../middlewares/auth')
 
 router.get('/getMessages', messages.getMessage);
 
-router.post('/postMessages', messages.postMessage);
+router.post('/postMessages',  messages.postMessage);
+
+router.post('/deleteMessage',  messages.deleteMessage);
 
 module.exports = router;

@@ -4,8 +4,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const SQLITE = require('./database/database')
-require('dotenv').config()
-
   
 
   const indexRouter = require('./routes/index')

@@ -1,9 +1,9 @@
 const axios = require('axios')
 
-export async function getMessages(){
+export async function getMessages(payload){
     let res = {}
 
-    await axios.get('http://localhost:3000/api/msg/getMessages')
+    await axios.post('http://localhost:3000/api/msg/getMessages', payload)
         .then((response) => {
             res = response.data
         })
@@ -19,6 +19,10 @@ export async function postMessages(payload){
 
 export async function deleteMessage(payload){
     await axios.post('http://localhost:3000/api/msg/deleteMessage', payload)
+}
+
+export async function likeManager(payload){
+    await axios.post('http://localhost:3000/api/msg/likeMessage', payload)
 }
 
 

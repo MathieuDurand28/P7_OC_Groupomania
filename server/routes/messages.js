@@ -5,10 +5,12 @@ const messages = require('../controllers/messages/messages')
 const authentified = require('../middlewares/auth')
 
 
-router.get('/getMessages', messages.getMessage);
+router.post('/getMessages', authentified, messages.getMessage)
 
-router.post('/postMessages',  messages.postMessage);
+router.post('/postMessages',  authentified, messages.postMessage)
 
-router.post('/deleteMessage',  messages.deleteMessage);
+router.post('/deleteMessage',  authentified, messages.deleteMessage)
+
+router.post('/likeMessage',  authentified, messages.likeManager)
 
 module.exports = router;

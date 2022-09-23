@@ -1,6 +1,6 @@
 const Database = require('../../database/database')
 const {Message} = require('../../models/Message')
-const {LikeMessage} = require('../../models/LikeMessage')
+
 
 
 exports.getMessage =  async function (req,res) {
@@ -41,7 +41,6 @@ exports.deleteMessage =  async function (req,res) {
         await Database.sequelize.authenticate()
         .then(() => {
             const user = Message.destroy({where: {id: data.id}})
-            LikeMessage.destroy({where: {msgId: data.id}})
             res.status(200).json({message: "message supprimé"})
         })
         .catch((err) => res.status(400).json({err: err}))
@@ -57,48 +56,77 @@ exports.likeManager =  async function (req,res) {
     const userWhoLiked = data.userId
     const messageId = data.msgId
 
+    
     try {
         await Database.sequelize.authenticate()
         .then(async () => {
             const message = await Message.findOne({where: {id: messageId}})
 
-            const alreadyLiked = await LikeMessage.findAll({where: {userId: userWhoLiked}})
+            const arrayLikes = message.usersLiked.split(";")
 
-            if (alreadyLiked == null || alreadyLiked.length <= 0){
-                LikeMessage.create({
-                    msgId: messageId,
-                    userId: userWhoLiked
-                })
+            if (arrayLikes.length <= 1){
+                message.usersLiked = userWhoLiked+";"
                 message.like += 1
                 message.save()
             } else {
-                let find = false
-                alreadyLiked.map((like) => {
-                    if (like.msgId == messageId){
-                        LikeMessage.destroy({where: {userId: like.userId}})
-                        find = true
+                let newArrayOfString = ""
+                let findLike = false
+
+                arrayLikes.map((likes, index) => {
+                    if (likes == userWhoLiked) {
+                        arrayLikes.splice(index,1)
+                        message.like > 0 ? message.like -= 1 : message.ike = 0
+                        message.save()
+                        findLike = true
                     }
                 })
-                if (!find){
-                    LikeMessage.create({
-                        userId: userWhoLiked,
-                        msgId: messageId
-                    })
+
+                if (!findLike){
+                    arrayLikes.push(userWhoLiked)
                     message.like += 1
                     message.save()
-                } else{
-                    message.like > 0 ? message.like -= 1 : message.like = 0
-                    message.save()
                 }
+
+                arrayLikes.map((likesToString) => {
+                    if (likesToString !== ""){
+                        newArrayOfString += likesToString+";"
+                    }
+                    
+                })
+
+                message.usersLiked = newArrayOfString
+                message.save()
             }
-            res.status(200).json({message: "like manager ok "})
+
+
+            res.status(200).json({message: "usersLikedString"})
         })
-        .catch((err) => res.status(400).json({err: err}))
+        .catch((err) => console.log(err))
 
     } catch (error) {
         res.status(400).json({err: error})
     }
+}
 
+exports.alreadyLike = async function (req,res) {
+    const data = req.body
+    const messageId = data.msgId
+    const userWhoLiked = data.userId
+    let already = false
+    try{
+        const message = await Message.findOne({where: {id: messageId}})
+    const arrayLikes = message.usersLiked.split(";")
 
-   
+    arrayLikes.map((search) => {
+        if (search == userWhoLiked){
+            already = true
+        }
+    })
+    res.status(200).json({like: already, messageId: messageId})
+    }
+    catch {
+        res.status(400).json({err: 'erreur'})
+    }
+    
+
 }

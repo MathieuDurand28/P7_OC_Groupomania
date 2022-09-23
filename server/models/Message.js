@@ -20,6 +20,11 @@ const Message = Database.sequelize.define("Message", {
         type: DataTypes.NUMBER,
         allowNull: false,
         defaultValue: 0
+    },
+    usersLiked: {
+        type : DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ""
     }
     })
 

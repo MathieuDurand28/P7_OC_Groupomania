@@ -1,5 +1,5 @@
 import './Content.scss';
-import {postMessages, getMessages, deleteMessage, likeManager} from "../../services/messages"
+import {postMessages, getMessages, deleteMessage, likeManager, alreadyLikeSearch} from "../../services/messages"
 import Modal from '@material-ui/core/Modal';
 import {useForm} from "react-hook-form"
 import {useSelector} from "react-redux"
@@ -15,7 +15,6 @@ export default function Content() {
     const [messages, setMessages] = useState([])
     const [modif, setModif] = useState({})
     const [open, setOpen] = useState(false)
-
 
     const getMsg = () => {
         getMessages({token: user_logged.token}).then((res) => setMessages(res.all_posts.reverse()))
@@ -51,7 +50,6 @@ export default function Content() {
     }
 
     const likeMessage = async (msg_id,user_id) => {
-        console.log(user_id,msg_id)
         await likeManager({userId:user_id,msgId:msg_id,token: user_logged.token})
         getMsg()
     }
@@ -68,6 +66,20 @@ export default function Content() {
             }
         })
     }
+
+    const like = (users) => {
+        const arrayOfUsers = users.split(";")
+        let find = false
+        if (arrayOfUsers.length > 0){
+            arrayOfUsers.map((users) => {
+                if (users === user_logged.user_id.toString()){
+                    find = true
+                }
+            })
+        }
+        return find
+    }
+
 
     const handleClose = () => {
         setOpen(false);
@@ -115,7 +127,9 @@ export default function Content() {
                             <p>{msg.message}</p>
                         </div>
                         <div className="card-footer">
-                            <p><span className="likeBtn" onClick={(like) => likeMessage(msg.id,user_logged.user_id)}>👍</span> {msg.like}</p>
+                            <p><span className="likeBtn" onClick={(like) => likeMessage(msg.id,user_logged.user_id)}>
+                                {like(msg.usersLiked) ? "👎 Je n'aime plus" : "👍 J'aime"}
+                            </span> ({msg.like})</p>
                             <div className="btn_footer">
                                 {(msg.userId === user_logged.user_id || user_logged.isAdmin) &&
                                     <p className="modify footer_btn" onClick={(e) => handleOpen(msg.id)}>Modifier</p>

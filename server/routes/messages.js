@@ -13,4 +13,6 @@ router.post('/deleteMessage',  authentified, messages.deleteMessage)
 
 router.post('/likeMessage',  authentified, messages.likeManager)
 
+router.post('/alreadyLike',  authentified, messages.alreadyLike)
+
 module.exports = router;

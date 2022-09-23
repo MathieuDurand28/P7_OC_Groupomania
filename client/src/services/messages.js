@@ -25,4 +25,16 @@ export async function likeManager(payload){
     await axios.post('http://localhost:3000/api/msg/likeMessage', payload)
 }
 
+export async function alreadyLikeSearch(payload){
+    let res = {}
+    await axios.post('http://localhost:3000/api/msg/alreadyLike', payload)
+        .then((response) => {
+            res = response.data.like
+        })
+        .catch((error) => {
+            res = error
+        })
+    return res
+}
+
 

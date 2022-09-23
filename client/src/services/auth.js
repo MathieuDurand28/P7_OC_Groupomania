@@ -1,4 +1,3 @@
-import {add_user} from "./features/user/userSlice";
 const axios = require('axios')
 
 

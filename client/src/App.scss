@@ -10,6 +10,12 @@ html{
   height: 100vh;
   background-color: #FFD7D7;
 }
+.font-12{
+  font-size: 12px;
+  &.light{
+    color: #FFD7D7 ;
+  }
+}
 .font-15{
   font-size: 15px;
 }

@@ -1,3 +1,11 @@
+/**
+ * 
+ * @param email 
+ * Fonction permettant de spliter les information d'une adresse mail
+ * pour isoler le nom de l'utilisateur.
+ * @returns string
+ * 
+ */
 export default function nameSplit (email) {
     let name = ""
 

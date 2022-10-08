@@ -6,6 +6,7 @@
 ./server/node_modules
 ./server/database/groupomania_db.sqlite
 ./database/
+./public/images/
 /.pnp
 .pnp.js
 

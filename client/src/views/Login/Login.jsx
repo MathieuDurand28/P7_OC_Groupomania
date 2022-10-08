@@ -5,14 +5,24 @@ import {GetSignUp, GetLogin} from "../../services/auth"
 import {useDispatch} from "react-redux";
 import {add_user} from "../../services/features/user/userSlice";
 
-
+/**
+ * 
+ * Composant Login / signup
+ */
 function Login() {
+  /**
+   * déclarations des states nécessaires.
+   */
   const {register, handleSubmit} = useForm()
   const [errorMessages, setErrorMessages] = useState({});
   const [modeForm, updateModeForm] = useState({message: "Se connecter", login: true, signup: false})
   const dispatch = useDispatch()
 
+  /**
+   * action au submit du formulaire du login / signup
+   */
   const onSubmit = (data) => {
+    // vérification des champs mail et mot de passe non vides.
     if (data.email.length <= 0){
       setErrorMessages({ name: "email", message: "l'Email ne peut être vide." });
     } else if (data.password.length <= 0){
@@ -24,6 +34,7 @@ function Login() {
               setErrorMessages({ name: "auth", message: r.message });
             } else {
               dispatch(add_user(r))
+              localStorage.setItem("user", JSON.stringify(r.token))
               setErrorMessages({})
             }
           })
@@ -33,6 +44,7 @@ function Login() {
               setErrorMessages({ name: "auth", message: r.message });
             } else {
               dispatch(add_user(r))
+              localStorage.setItem("user", JSON.stringify(r.token))
               setErrorMessages({})
             }
           })
@@ -40,20 +52,31 @@ function Login() {
     }
   }
 
-
+/**
+ * 
+ * @param name 
+ * fonction permettant d'afficher le message d'erreur dans la page du login
+ */
   const renderErrorMessage = (name) =>
       name === errorMessages.name && (
           <div className="error">{errorMessages.message}</div>
       );
 
+  /**
+   * Switch entre login / signup
+   */
   const signUpForm = () => {
     updateModeForm({message: "Créer le compte", login: false, signup: true })
   }
 
+  /**
+   * Switch entre login / signup
+   */
   const loginForm = () => {
     updateModeForm({message: "Se connecter", login: true, signup: false})
   }
 
+  
   return (
     <div className="container">
       <img src="logos/icon-left-font-monochrome-black.svg" alt="Logo de Groupomania"/>

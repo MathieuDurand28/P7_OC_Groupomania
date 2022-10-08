@@ -11,7 +11,7 @@ require('dotenv').config()
  */
 module.exports = (req, res, next) => {
   try {
-    const token = req.body.token
+    const token = req.body.token || req.query.token || req.headers["x-access-token"]
     const decodedToken = jwt.verify(token, process.env.TOKEN_KEY)
     const userId = decodedToken.userId
     req.auth = { userId }

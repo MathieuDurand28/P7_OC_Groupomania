@@ -15,6 +15,25 @@
     flex-basis: 70%;
     margin: 0  10px 0 10px;
     border-radius: 10px;
+    .image-post{
+      display: flex;
+      flex-direction: column;
+      color: white;
+      margin-top: 10px ;
+      padding: 10px;
+      border: 1px solid whitesmoke;
+      label{
+        cursor: pointer;
+      }
+      #file-name{
+        margin-top: 5px;
+        color: #FFD7D7;
+      }
+      #image_post{
+        margin-top: 10px;
+        display: none;
+      }
+    }
   }
   .card{
     display: flex;
@@ -26,11 +45,12 @@
     border: 2px solid whitesmoke;
     border-radius: 20px;
     .card-head{
-      border-bottom: 1px solid whitesmoke;
+      border-bottom: 3px solid whitesmoke;
       font-weight: bold;
       color: whitesmoke;
+      padding-bottom: 15px;
       .suppress{
-        color: pink;
+        color: #FFD7D7;
         cursor: pointer;
         &:hover{
           color: white;
@@ -38,13 +58,26 @@
       }
     }
     .card-content{
+      display: flex;
+      flex-direction: column;
       color: whitesmoke;
+      .attachement{
+        margin-bottom: 0;
+        max-width: 550px;
+        height: 300px;
+        object-fit: cover;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #FFD7D7;
+      }
+      .text_message{
+        color: #FFD7D7;
+      }
     }
     .card-footer{
       display: flex;
       flex-direction: column;
       color: whitesmoke;
-      border-top: 1px solid whitesmoke;
+      border-top: 3px solid whitesmoke;
       .likeBtn{
         cursor: pointer;
       }
@@ -104,9 +137,6 @@
 }
 .modal{
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -117,8 +147,76 @@
   background: #FD2D01;
   color: white;
   border: 2px solid #000;
-  .textarea{
-    width: 500px;
-    text-align: center;
+  #modal-modal-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
+  .modal_content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &.image-post-modal{
+      display: flex;
+      flex-direction: column;
+      color: white;
+      margin-top: 10px ;
+      padding: 10px;
+      label{
+        border: 1px solid whitesmoke;
+        padding: 10px;
+        cursor: pointer;
+      }
+      #file-name{
+        margin-top: 5px;
+        color: #FFD7D7;
+      }
+      #image_post_modal{
+        margin-top: 10px;
+        display: none;
+      }
+      .modal_content_footer{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-content: center;
+        padding: 15px;
+      }
+    }
+
+    .attachement-modal{
+      max-width: 350px;
+      max-height: 250px;
+      object-fit: cover;
+      margin: 15px
+    }
+    .textarea{
+      width: 500px;
+      text-align: center;
+      margin: 15px
+    }
+  }
+  .modal_footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 25px;
+  }
+  .modal_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFD7D7;
+    color: black;
+    height: 20px;
+    width: 150px;
+    border-radius: 10px;
+    border: #FFD7D7;
+    cursor: pointer;
+    &:hover{
+      background-color: #4E5166;
+      color: white;
+    }
+  }
+
 }

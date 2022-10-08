@@ -3,6 +3,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {kick_user} from "../../services/features/user/userSlice";
 import nameSplit from "../../services/nameSplit";
 
+/**
+ * 
+ * Composant Header contenant le haut de page.
+ */
 export default function Header() {
     const dispatch = useDispatch()
     const user_logged = useSelector((state) => state.user)
@@ -10,6 +14,9 @@ export default function Header() {
 
     const Quit = () => {
         dispatch(kick_user())
+        if (localStorage.getItem('user')) {
+            localStorage.setItem('user', "")
+        }
     }
 
     return (

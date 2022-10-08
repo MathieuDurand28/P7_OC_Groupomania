@@ -2,8 +2,10 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const fileupload = require('express-fileupload')
 const logger = require('morgan');
 const SQLITE = require('./database/database')
+
   
 
   const indexRouter = require('./routes/index')
@@ -28,6 +30,9 @@ app.use((req, res, next) => {
   next();
 });
 
+/**
+ * Authentification et synchronisation de Sequelize
+ */
 try {
   SQLITE.sequelize.authenticate()
   .then(() => {
@@ -41,8 +46,12 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(fileupload())
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * Définition des routes de l'application
+ */
 app.use('/', indexRouter);
 app.use('/api/auth', usersRouter)
 app.use('/api/msg', messagesRouter)

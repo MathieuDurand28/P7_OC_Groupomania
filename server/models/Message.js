@@ -25,7 +25,33 @@ const Message = Database.sequelize.define("Message", {
         type : DataTypes.STRING,
         allowNull: true,
         defaultValue: ""
-    }
-    })
+    },
+    imageSrc: {
+        type : DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ""
+    },
+    createdUtcDate: {
+        type : DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ""
+    },
+    updatedUtcDate: {
+        type : DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ""
+    },
+    createdTimestamp: {
+        type : DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ""
+    },
+    updatedTimestamp: {
+        type : DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ""
+    },
+
+    },{timestamps: false})
 
 exports.Message = Message

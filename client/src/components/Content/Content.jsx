@@ -289,23 +289,23 @@ export default function Content() {
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Modification du message de {modif.author}
                             </Typography>
-                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <span className="modal_content image-post-modal">
-                                        {modif.imageSrc && <img src={"http://localhost:3000/images/"+ modif.imageSrc } alt="Photo accompagnant le message" className="attachement-modal" id="image-modal" />}
-                                        <label htmlFor="image_post_modal">{modif.imageSrc ? "Changer image" : "Ajouter image"}</label>
-                                        <input type="file" id="image_post_modal" name="image_post_modal" {...register("imageFileModal")} onChange={handleChangeModal} />
-                                        <span id="file-name">{newFileName}</span>
-                                        {modif.imageSrc  &&
-                                            <span className="modal_content_footer">
-                                                <button className="modal_btn" onClick={(e) => modal_image_suppress(e)}>Supprimer l'image</button>
-                                            </span>
-                                        }
-                                        <label>LA VALEUR NE CHANGE PAS DANS LE TEXTAREA</label>
-                                        <textarea className="textarea" name="description" id="text_modal" {...register("messageModal")} value={modif.message} onChange={handleTextModalChange} />
-                                        <label htmlFor="input-test">LA VALEUR CHANGE BIEN DANS UN INPUT</label>
-                                        <input type="text" id="input-test" value={modif.message} onChange={handleTextModalChange}/>
-                                    </span>
-                                </Typography>
+                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                <span className="modal_content image-post-modal">
+                                    {modif.imageSrc && <img src={"http://localhost:3000/images/"+ modif.imageSrc } alt="Photo accompagnant le message" className="attachement-modal" id="image-modal" />}
+                                    <label htmlFor="image_post_modal">{modif.imageSrc ? "Changer image" : "Ajouter image"}</label>
+                                    <input type="file" id="image_post_modal" name="image_post_modal" {...register("imageFileModal")} onChange={handleChangeModal} />
+                                    <span id="file-name">{newFileName}</span>
+                                    {modif.imageSrc  &&
+                                        <span className="modal_content_footer">
+                                            <button className="modal_btn" onClick={(e) => modal_image_suppress(e)}>Supprimer l'image</button>
+                                        </span>
+                                    }
+                                    <label>LA VALEUR NE CHANGE PAS DANS LE TEXTAREA</label>
+                                    <textarea className="textarea" name="description" id="text_modal" {...register("messageModal")} value={modif.message} onChange={handleTextModalChange} />
+                                    <label htmlFor="input-test">LA VALEUR CHANGE BIEN DANS UN INPUT</label>
+                                    <input type="text" id="input-test" value={modif.message} onChange={handleTextModalChange}/>
+                                </span>
+                            </Typography>
                             <div className="modal_footer">
                                 <Button className="modal_btn" onClick={handleClose}>Annuler</Button>
                                 <Button type="submit" className="modal_btn">Valider</Button>

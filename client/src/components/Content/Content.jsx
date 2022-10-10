@@ -15,12 +15,12 @@ import {useEffect, useState} from "react"
 import {Box, Button, Typography} from "@material-ui/core";
 
 /**
- * 
+ *
  * Composant contenant tout le contenu du site.
  */
 export default function Content() {
     /**
-     * déclarations des states nécessaires
+     * déclarations des States nécessaires
      */
     const user_logged                               = useSelector((state) => state.user)
     const {register, handleSubmit}                  = useForm()
@@ -35,14 +35,15 @@ export default function Content() {
 
 
     /**
-     * fonction permetttan de récupérer les messages depuis le serveur
+     * fonction permettant de récupérer les messages depuis le serveur
      */
     const getMsg = () => {
+        const text_area = document.getElementById("text-area")
         getMessages({token: user_logged.token}).then((res) => {setMessages(res.all_posts.reverse())})
     }
 
     /**
-     * 
+     *
      * fonction surveillant le changement de fichier dans la page principale
      */
     function handleChange(event) {
@@ -52,7 +53,7 @@ export default function Content() {
     }
 
     /**
-     * 
+     *
      * fonction surveillant le changement de fichier dans la modal de modification
      */
     function handleChangeModal(event) {
@@ -64,9 +65,9 @@ export default function Content() {
     }
 
     /**
-     * 
+     *
      * fonction appelée lors la soumission du formulaire d'envoi de message.
-     * 
+     *
      */
     const postMsg = async (data) => {
         const text_area = document.getElementById("text-area")
@@ -74,7 +75,7 @@ export default function Content() {
         let newImageName = ""
 
         //contrôle si le message n'est pas vide ou si un fichier est uploadé
-        if (data.message.length <= 0 && file.length <= 0 ){
+        if (text_area.value.length <= 0 && file.length <= 0 ){
             alert('Votre message est vide.')
         }
         else {
@@ -96,10 +97,10 @@ export default function Content() {
                 })
             }
 
-            //envoi du message au serveur 
+            //envoi du message au serveur
             await postMessages(
                 {
-                    message: data.message.length > 0 ? data.message : "",
+                    message: text_area.value.length > 0 ? text_area.value : "",
                     author: nameSplit(user_logged.email),
                     email: user_logged.email,
                     userId: user_logged.user_id,
@@ -109,12 +110,12 @@ export default function Content() {
             )
             text_area.value = ""
         }
-        getMsg() 
+        getMsg()
     }
 
     /**
-     * 
-     * @param datas 
+     *
+     * @param datas
      * Fonction permettant de supprimer / modifier un message depuis la modal de modification
      */
     const postModal = async (datas) => {
@@ -159,13 +160,13 @@ export default function Content() {
                 }
             )
         }
-        handleClose()
+        await handleClose()
         getMsg()
     }
 
     /**
-     * 
-     * @param id 
+     *
+     * @param id
      * fonction permettant de supprimer un message
      */
     const delete_message = async (id) => {
@@ -174,8 +175,8 @@ export default function Content() {
     }
 
     /**
-     * 
-     * @param id 
+     *
+     * @param id
      * fonction permettant de modifier un message
      */
     const modif_message = async (id) => {
@@ -183,8 +184,8 @@ export default function Content() {
     }
 
     /**
-     * 
-     * @param id 
+     *
+     * @param id
      * fonction permettant de liker un message
      */
     const likeMessage = async (msg_id,user_id) => {
@@ -193,9 +194,9 @@ export default function Content() {
     }
 
     /**
-     * 
-     * @param id 
-     * fonction permettant d'afficher la modal de modification 
+     *
+     * @param id
+     * fonction permettant d'afficher la modal de modification
      */
     const handleOpen = (id) => {
         messages.map((msg) => {
@@ -207,24 +208,24 @@ export default function Content() {
                     id: msg.id,
                     imageSrc: msg.imageSrc
                 })
-                setOpen(true);
             }
         })
+        setOpen(true);
     }
     /**
-     * 
-     * @param id 
-     * fonction permettant de fermer la modal de modification 
+     *
+     * @param id
+     * fonction permettant de fermer la modal de modification
      */
-    const handleClose = () => {
+    const handleClose = async () => {
         setsuppresImageModal({suppress: false, name: ""})
         setNewFileName("")
         setOpen(false);
     };
 
     /**
-     * 
-     * @param users 
+     *
+     * @param users
      * Fonction permettant de savoir si un utilisateur à déj& aimé un message.
      */
     const like = (users) => {
@@ -241,14 +242,18 @@ export default function Content() {
     }
 
     /**
-     * 
-     * @param e 
+     *
+     * @param e
      * Fonction permettant de supprimer une image.
      */
     const modal_image_suppress = (e) => {
         e.preventDefault()
         setsuppresImageModal({suppress: true, name:modif.imageSrc})
         setModif({...modif, imageSrc: ""})
+    }
+
+    const handleTextModalChange = (event) => {
+        setModif({...modif, message: event.target.value})
     }
 
 
@@ -262,7 +267,7 @@ export default function Content() {
             <main className="container">
                 <form className="posts_container" method="post" encType="multipart/form-data" onSubmit={handleSubmit(postMsg)} >
                     <div className="post_message">
-                        <textarea id="text-area" {...register("message")}></textarea>
+                        <textarea id="text-area"></textarea>
                     </div>
                     <div className="image-post">
                         <label htmlFor="image_post">Ajouter une image</label>
@@ -295,7 +300,10 @@ export default function Content() {
                                                 <button className="modal_btn" onClick={(e) => modal_image_suppress(e)}>Supprimer l'image</button>
                                             </span>
                                         }
-                                        <textarea className="textarea" name="description" id="text_modal" {...register("messageModal")} defaultValue={modif.message} />
+                                        <label>LA VALEUR NE CHANGE PAS DANS LE TEXTAREA</label>
+                                        <textarea className="textarea" name="description" id="text_modal" {...register("messageModal")} value={modif.message} onChange={handleTextModalChange} />
+                                        <label htmlFor="input-test">LA VALEUR CHANGE BIEN DANS UN INPUT</label>
+                                        <input type="text" id="input-test" value={modif.message} onChange={handleTextModalChange}/>
                                     </span>
                                 </Typography>
                             <div className="modal_footer">

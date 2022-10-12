@@ -24,3 +24,19 @@
     }
   }
 }
+
+@media screen and (max-width: 500px) {
+ .head{
+   img{
+     width: 40vw;
+     height: 50px;
+     align-self: center;
+   }
+   p:first-child{
+     margin-left: 5px;
+   }
+   p:last-child{
+     margin-right: 5px;
+   }
+ }
+}

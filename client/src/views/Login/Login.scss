@@ -43,3 +43,25 @@
   }
 }
 
+@media screen and (max-width: 500px) {
+  .container {
+    img {
+      width: 95vw;
+      height: 50px;
+      align-self: center;
+      margin-top: 50px;
+      margin-bottom: 100px;
+    }
+    .card-form{
+      width: 95vw;
+      .bloc-form{
+        display: flex;
+        flex-direction: column;
+        .label-login{
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+

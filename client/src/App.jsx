@@ -16,19 +16,19 @@ function App(){
 
     /**
      * déclenchement de useEffect au chargement et/ou changement de states
-     * -- étape servant à rendre les connexions persistantes -- 
-     * 
+     * -- étape servant à rendre les connexions persistantes --
+     *
      * vérification si un localstorage user existe:
      * si oui : requête serveur pour authentifier le token et insérer les données user dans le store Redux
      * si non : envoi vers le login
-     * 
+     *
      */
     useEffect(() => {
         if (localStorage.getItem('user') && user_logged.user === null ) {
             const token = {
                 token: JSON.parse(localStorage.getItem('user'))
             }
-            checkingToken(token).then((r) => dispatch(add_user(r)))
+            checkingToken(token).then((r) => r.user_id && dispatch(add_user(r)))
 
         }
     })

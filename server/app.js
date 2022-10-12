@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const fileupload = require('express-fileupload')
+const rateLimit = require('express-rate-limit')
 const logger = require('morgan');
 const SQLITE = require('./database/database')
 
@@ -42,11 +43,21 @@ try {
   console.error('Unable to connect to the database:', error)
 }
 
+const limiter = rateLimit({
+	windowMs: 1 * 60 * 1000, // 2 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(fileupload())
+app.use(limiter)
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**

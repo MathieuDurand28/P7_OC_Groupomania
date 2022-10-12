@@ -1,7 +1,8 @@
 const Database = require('../../database/database')
 const {Message} = require('../../models/Message')
 const accents = require('remove-accents');
-const fs = require('fs')
+const fs = require('fs');
+const { time } = require('console');
 
 
 /**
@@ -23,7 +24,7 @@ exports.getMessage =  async function (req,res) {
  */
 exports.postMessage =  async function (req,res){
     const data = req.body
-
+    const time = timeFormatter()
     try {
         await Database.sequelize.authenticate()
         .then(() => {
@@ -31,6 +32,10 @@ exports.postMessage =  async function (req,res){
                 message: data.message,
                 author: data.author,
                 userId: data.userId,
+                createdUtcDate: time.fullTime,
+                updatedUtcDate: time.fullTime,
+                createdTimestamp: time.timestamp,
+                updatedTimestamp: time.timestamp,
                 like: 0,
                 imageSrc: data.fileName 
             })
@@ -58,12 +63,16 @@ exports.postMessage =  async function (req,res){
  */
 exports.updateMessage =  async function (req,res) {
     const data = req.body
+    const time = timeFormatter()
+
     try {
         await Database.sequelize.authenticate()
         .then(() => {
             Message.findOne({where: {id: data.id}})
             .then((msg) => {
                 msg.message = data.message
+                msg.updatedTimestamp = time.timestamp,
+                msg.updatedUtcDate = time.fullTime,
                 msg.save()
                 res.status(200).json({message: "message updaté"})
             })
@@ -268,8 +277,26 @@ exports.suppressImage = async function (req,res) {
     catch {
         res.status(400).json({err: 'erreur'})
     }
-    
+}
 
+/**
+ * 
+ * @returns Array
+ * Fonction de formatage de date et heure. 
+ * permet de sortir une date au format timestamp et Fr JJ/MM/AAAA
+ * permet de sortir une heure au format GMT+2 HH:MM:SS
+ */
+const timeFormatter = () => {
+    const timestamp = Date.now()
+    const date = new Date(timestamp)
+    const utcDate = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()
+    const hoursWithZero = date.getHours() < 10 ? "0"+date.getHours() : date.getHours()
+    const minutesWithZero = date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()
+    const secondesWithZero = date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds()
+    const utcTime = hoursWithZero+":"+minutesWithZero+":"+secondesWithZero
+    const fullDateTime = utcDate+" "+utcTime
+
+    return {timestamp: timestamp, fullTime: fullDateTime, utcDate: utcDate}
 }
 
 

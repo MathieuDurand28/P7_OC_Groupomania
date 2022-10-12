@@ -39,7 +39,10 @@ export default function Content() {
      */
     const getMsg = () => {
         const text_area = document.getElementById("text-area")
-        getMessages({token: user_logged.token}).then((res) => {setMessages(res.all_posts.reverse())})
+        getMessages({token: user_logged.token}).then((res) => {
+            const triage = res.all_posts.sort((a,b) => {return b.updatedTimestamp - a.updatedTimestamp})
+            setMessages(triage)
+        })
     }
 
     /**
@@ -120,6 +123,8 @@ export default function Content() {
      */
     const postModal = async (datas) => {
         let imageName = ""
+        const text_area = document.getElementById("text_modal")
+        const messageModal = text_area.value
 
         if (suppresImageModal.suppress){
             await suppresImage({
@@ -145,12 +150,10 @@ export default function Content() {
                     console.error(error)
                 })
         }
-        if (datas.messageModal.length > 0){
-            const modal_text = document.getElementById("text_modal")
-
+        if (messageModal.length > 0){
             await updateMessage(
                 {
-                    message: datas.messageModal,
+                    message: messageModal,
                     author: nameSplit(user_logged.email),
                     email: user_logged.email,
                     userId: user_logged.user_id,
@@ -300,10 +303,7 @@ export default function Content() {
                                             <button className="modal_btn" onClick={(e) => modal_image_suppress(e)}>Supprimer l'image</button>
                                         </span>
                                     }
-                                    <label>LA VALEUR NE CHANGE PAS DANS LE TEXTAREA</label>
-                                    <textarea className="textarea" name="description" id="text_modal" {...register("messageModal")} value={modif.message} onChange={handleTextModalChange} />
-                                    <label htmlFor="input-test">LA VALEUR CHANGE BIEN DANS UN INPUT</label>
-                                    <input type="text" id="input-test" value={modif.message} onChange={handleTextModalChange}/>
+                                    <textarea className="textarea" name="description" id="text_modal" value={modif.message} onChange={handleTextModalChange}  />
                                 </span>
                             </Typography>
                             <div className="modal_footer">
@@ -317,7 +317,7 @@ export default function Content() {
                     <div className="card" key={msg.id}>
                         <div className="card-head">
                             <p className="font-20">{msg.author}</p>
-                            <i className="font-12 light" >{msg.author}</i>
+                            <i className="font-12 light" >{msg.updatedUtcDate}</i>
                         </div>
                         <div className="card-content">
                             {msg.imageSrc && <img src={"http://localhost:3000/images/"+ msg.imageSrc } alt="Photo accompagnant le message" className="attachement" />}

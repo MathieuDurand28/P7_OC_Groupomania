@@ -6,7 +6,7 @@ import {useDispatch} from "react-redux";
 import {add_user} from "../../services/features/user/userSlice";
 
 /**
- * 
+ *
  * Composant Login / signup
  */
 function Login() {
@@ -31,7 +31,9 @@ function Login() {
         if (modeForm.login){
           GetLogin(data).then(r => {
             if (!r.token){
-              setErrorMessages({ name: "auth", message: r.message });
+              //interception du status code 429 indiquant un trop grand nombre de tentatives.
+              const status = r.message.search("429")
+              setErrorMessages({ name: "auth", message: (status === 32 ) ? "Trop de tentatives, veuillez patienter quelques minutes" : r.message });
             } else {
               dispatch(add_user(r))
               localStorage.setItem("user", JSON.stringify(r.token))
@@ -53,8 +55,8 @@ function Login() {
   }
 
 /**
- * 
- * @param name 
+ *
+ * @param name
  * fonction permettant d'afficher le message d'erreur dans la page du login
  */
   const renderErrorMessage = (name) =>
@@ -76,7 +78,7 @@ function Login() {
     updateModeForm({message: "Se connecter", login: true, signup: false})
   }
 
-  
+
   return (
     <div className="container">
       <img src="logos/icon-left-font-monochrome-black.svg" alt="Logo de Groupomania"/>

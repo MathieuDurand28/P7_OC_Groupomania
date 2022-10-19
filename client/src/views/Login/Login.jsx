@@ -1,6 +1,7 @@
 import {useForm} from 'react-hook-form'
 import './Login.scss';
 import {useState} from "react";
+import { passwordStrength } from 'check-password-strength'
 import {GetSignUp, GetLogin} from "../../services/auth"
 import {useDispatch} from "react-redux";
 import {add_user} from "../../services/features/user/userSlice";
@@ -22,6 +23,7 @@ function Login() {
    * action au submit du formulaire du login / signup
    */
   const onSubmit = (data) => {
+    const passStrength = passwordStrength(data.password).id
     // vérification des champs mail et mot de passe non vides.
     if (data.email.length <= 0){
       setErrorMessages({ name: "email", message: "l'Email ne peut être vide." });
@@ -40,16 +42,23 @@ function Login() {
               setErrorMessages({})
             }
           })
+          //lors du signup, la complexité du mot de passe est vérifié par passStrength.
         } else if (modeForm.signup){
-          GetSignUp(data).then(r => {
-            if (!r.token){
-              setErrorMessages({ name: "auth", message: r.message });
-            } else {
-              dispatch(add_user(r))
-              localStorage.setItem("user", JSON.stringify(r.token))
-              setErrorMessages({})
-            }
-          })
+          if ( passStrength < 2){
+            setErrorMessages({ name: "password", message: "Le mot de passe n'est pas assez complexe." +
+                  " il doit contenir : Majuscules, minuscules, symboles et chiffres sur 8 caractères minimum." });
+          } else {
+            GetSignUp(data).then(r => {
+              if (!r.token){
+                setErrorMessages({ name: "auth", message: r.message });
+              } else {
+                dispatch(add_user(r))
+                localStorage.setItem("user", JSON.stringify(r.token))
+                setErrorMessages({})
+              }
+            })
+          }
+
         }
     }
   }

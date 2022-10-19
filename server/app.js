@@ -6,6 +6,7 @@ const fileupload = require('express-fileupload')
 const rateLimit = require('express-rate-limit')
 const logger = require('morgan');
 const SQLITE = require('./database/database')
+const auth = require('./controllers/auth/authentification')
 
   
 
@@ -64,7 +65,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  * Définition des routes de l'application
  */
 app.use('/', indexRouter);
-app.use('/api/auth', usersRouter)
+app.use('/api/auth', auth.adminExist, usersRouter)
 app.use('/api/msg', messagesRouter)
 
 

@@ -10,19 +10,24 @@
     margin-bottom: 100px;
   }
   .card-form{
-    max-width: 700px;
-    max-height: 400px;
+    width: 500px;
+    max-height: 600px;
     align-self: center;
     background-color: #FD2D01 ;
     border-radius: 20px;
     border: 1px solid #FD2D01;
+    .input-login{
+      margin-top: 10px;
+      width: 85%;
+    }
     .bloc-form{
       margin: 40px;
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
       align-items: center;
       .label-login{
-        margin-right: 25px;
+        margin-right: 5px;
       }
     }
     .bloc-form-submit{
@@ -31,6 +36,9 @@
       margin-bottom: 20px;
       &.error{
         color: whitesmoke;
+        margin: 20px;
+        text-align: center;
+
       }
     }
     .create-account{
@@ -55,10 +63,8 @@
     .card-form{
       width: 95vw;
       .bloc-form{
-        display: flex;
-        flex-direction: column;
-        .label-login{
-          margin-right: 5px;
+        .input-login{
+          width: 100%;
         }
       }
     }

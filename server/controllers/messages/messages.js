@@ -73,7 +73,11 @@ exports.updateMessage =  async function (req,res) {
                 msg.message = data.message
                 msg.updatedTimestamp = time.timestamp,
                 msg.updatedUtcDate = time.fullTime,
+                msg.imageSrc = (data.newFileName.length > 0) ? data.newFileName : msg.imageSrc
                 msg.save()
+                if (msg.message === "" && msg.imageSrc === ""){
+                    Message.destroy({where: {id: data.id}})
+                }
                 res.status(200).json({message: "message updaté"})
             })
         })
@@ -265,9 +269,6 @@ exports.suppressImage = async function (req,res) {
                     .then((msg) => {
                         msg.imageSrc = ""
                         msg.save()
-                        if (msg.message.length <= 0){
-                            Message.destroy({where: {id: messageId}})
-                        }
                     })
                 })
             }

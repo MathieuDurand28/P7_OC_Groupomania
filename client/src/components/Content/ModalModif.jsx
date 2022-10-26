@@ -90,8 +90,8 @@ export const ModalModif = (props) => {
                 newFileName: imageName
             }
         )
-
         await handleClose()
+        props.getMsg()
     }
 
     /**

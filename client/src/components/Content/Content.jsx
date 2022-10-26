@@ -1,11 +1,11 @@
 import './Content.scss';
-import {getMessages} from "../../services/messages"
-import {Message} from './Message'
+import {Messages} from './Messages'
 import {useSelector} from "react-redux"
-import {useEffect, useState} from "react"
+import {useState} from "react"
 import {ModalModif} from "./ModalModif";
 import {MessagePost} from "./MessagePost";
 import {Aside} from "./Aside";
+import {getMessages} from "../../services/messages";
 
 /**
  *
@@ -15,10 +15,10 @@ export default function Content() {
     /**
      * déclarations des States nécessaires
      */
-    const user_logged = useSelector((state) => state.user)
     const [messages, setMessages] = useState([])
     const [modif, setModif] = useState({})
     const [open, setOpen] = useState(false)
+    const user_logged = useSelector((state) => state.user)
 
     /**
      * fonction permettant de récupérer les messages depuis le serveur
@@ -34,28 +34,22 @@ export default function Content() {
         })
     }
 
-    useEffect(() => {
-        getMsg()
-    }, [])
 
     return (
         <div className="content">
             <Aside />
             <main className="container">
-                <MessagePost />
-                {messages.map((msg) =>
-                    <Message key={msg.id}
-                             datas={msg}
-                             messages={messages}
-                             setModif={setModif}
-                             setOpen={setOpen}
-                             users={msg.usersLiked}
-                    />
-                )}
+                <MessagePost getMsg={getMsg} />
+                <Messages setModif={setModif}
+                          setOpen={setOpen}
+                          getMsg={getMsg}
+                          messages={messages}
+                />
                 <ModalModif modif={modif}
                             setModif={setModif}
                             setOpen={setOpen}
                             open={open}
+                            getMsg={getMsg}
                 />
             </main>
             <Aside />

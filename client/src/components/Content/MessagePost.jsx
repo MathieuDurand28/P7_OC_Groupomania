@@ -66,6 +66,7 @@ export const MessagePost = (props) => {
                 },
             )
             text_area.value = ""
+            props.getMsg()
         }
     }
 

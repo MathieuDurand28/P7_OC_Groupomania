@@ -27,11 +27,11 @@
 
 1. éditez le fichier .env_sample pour y indiquer vos informations confidentielles
 2. Renommez le fichier .env_sample en .env
-3. entrer la commande "nodemon start" dans une terminal pour lancer le serveur
+3. entrer la commande "nodemon start" dans un terminal pour lancer le serveur
 
 ###### <u>Front (client)</u>:
 
 1. aller dans le dossier src/apiSetting et renseignez dans le fichier JSON l'adresse du back de l'application. Par défaut l'adresse est : http://localhost:3000 
-1. entrer la commande "node start" dans une terminal pour lancer React. 
+1. entrer la commande "npm start" dans une terminal pour lancer React. 
 
 * Si un message vous demande de changer de Port, confirmez en tapant Y

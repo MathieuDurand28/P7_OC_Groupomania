@@ -1,20 +1,11 @@
 import './Content.scss';
-import {
-    postMessages,
-    getMessages,
-    deleteMessage,
-    likeManager,
-    updateMessage,
-    suppresImage
-} from "../../services/messages"
-import Modal from '@material-ui/core/Modal';
-import {useForm} from "react-hook-form"
+import {getMessages} from "../../services/messages"
+import {Message} from './Message'
 import {useSelector} from "react-redux"
-import nameSplit from "../../services/nameSplit"
 import {useEffect, useState} from "react"
-import {Box, Button, Typography} from "@material-ui/core";
-const api = require('../../apiSetting/config.json')
-
+import {ModalModif} from "./ModalModif";
+import {MessagePost} from "./MessagePost";
+import {Aside} from "./Aside";
 
 /**
  *
@@ -25,256 +16,23 @@ export default function Content() {
      * déclarations des States nécessaires
      */
     const user_logged = useSelector((state) => state.user)
-    const {register, handleSubmit} = useForm()
     const [messages, setMessages] = useState([])
     const [modif, setModif] = useState({})
     const [open, setOpen] = useState(false)
-    const [file, setFile] = useState("")
-    const [newFile, setNewFile] = useState("")
-    const [originalFileName, setOriginalFileName] = useState("")
-    const [newFileName, setNewFileName] = useState("")
-    const [suppresImageModal, setsuppresImageModal] = useState({suppress: false, name: ""})
-
 
     /**
      * fonction permettant de récupérer les messages depuis le serveur
      */
     const getMsg = () => {
-        const text_area = document.getElementById("text-area")
         getMessages({token: user_logged.token}).then((res) => {
             const triage = res.all_posts.sort((a, b) => {
+                //triage des messages par le champ updatedTimestamp pour
+                //classer les messages du plus récent au plus vieux.
                 return b.updatedTimestamp - a.updatedTimestamp
             })
             setMessages(triage)
         })
     }
-
-    /**
-     *
-     * fonction surveillant le changement de fichier dans la page principale
-     */
-    function handleChange(event) {
-        const input_image = event.target.files
-        setOriginalFileName(input_image[0].name)
-        setFile(input_image)
-    }
-
-    /**
-     *
-     * fonction surveillant le changement de fichier dans la modal de modification
-     */
-    function handleChangeModal(event) {
-        const input_image = event.target.files
-        const image_modal = document.getElementById('image-modal')
-        image_modal.src = (URL.createObjectURL(event.target.files[0]))
-        if (file) {
-            setsuppresImageModal({suppress: true, name: modif.imageSrc})
-        }
-
-        setNewFileName(input_image[0].name)
-        setNewFile(input_image)
-    }
-
-    /**
-     *
-     * fonction appelée lors la soumission du formulaire d'envoi de message.
-     *
-     */
-    const postMsg = async (data) => {
-        const text_area = document.getElementById("text-area")
-        const formData = new FormData()
-        let newImageName = ""
-        console.log()
-        //contrôle si le message n'est pas vide ou si un fichier est uploadé
-        if ((text_area.value.length <= 0 || !text_area.value.replace(/\s/g, '').length) && file.length <= 0) {
-            alert('Votre message est vide.')
-        } else {
-            //si un fichier est uploadé, envoi du fichier au serveur
-            if (file.length > 0) {
-                formData.append('myFile', file[0])
-                await fetch(`${api.api_url}/msg/postImage`, {
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then(response => response.json())
-                    .then((result) => {
-                        newImageName = result.full_name
-                        setOriginalFileName("")
-                        setFile("")
-                    })
-                    .catch(error => {
-                        console.error(error)
-                    })
-            }
-
-            //envoi du message au serveur
-            await postMessages(
-                {
-                    message: text_area.value.length > 0 ? text_area.value : "",
-                    author: nameSplit(user_logged.email),
-                    email: user_logged.email,
-                    userId: user_logged.user_id,
-                    token: user_logged.token,
-                    fileName: newImageName
-                },
-            )
-            text_area.value = ""
-        }
-        getMsg()
-    }
-
-    /**
-     *
-     * @param datas
-     * Fonction permettant de supprimer / modifier un message depuis la modal de modification
-     */
-    const postModal = async (datas) => {
-        let imageName = ""
-        const text_area = document.getElementById("text_modal")
-        const messageModal = text_area.value
-
-        if (suppresImageModal.suppress) {
-            await suppresImage({
-                msgId: modif.id,
-                image: suppresImageModal.name,
-                token: user_logged.token
-            })
-        }
-
-        if (newFile.length > 0) {
-            const newformData = new FormData()
-            newformData.append('myFile', newFile[0])
-            await fetch(`${api.api_url}/msg/postImage`, {
-                method: 'POST',
-                body: newformData,
-            })
-                .then(response => response.json())
-                .then((result) => {
-                    imageName = result.full_name
-                    setNewFileName("")
-                    setNewFile("")
-                })
-                .catch(error => {
-                    console.error(error)
-                })
-        }
-        await updateMessage(
-            {
-                message: (messageModal.replace(/\s/g, '').length) ? messageModal : "",
-                author: nameSplit(user_logged.email),
-                email: user_logged.email,
-                userId: user_logged.user_id,
-                token: user_logged.token,
-                id: modif.id,
-                newFileName: imageName
-            }
-        )
-
-        await handleClose()
-        getMsg()
-    }
-
-    /**
-     *
-     * @param id
-     * fonction permettant de supprimer un message
-     * @param imageSrc
-     */
-    const delete_message = async (id, imageSrc) => {
-        if (imageSrc){
-            await suppresImage({
-                msgId: id,
-                image: imageSrc,
-                token: user_logged.token
-            })
-        }
-
-        await deleteMessage({id: id, token: user_logged.token})
-        getMsg()
-    }
-
-    /**
-     *
-     * @param id
-     * fonction permettant de modifier un message
-     */
-    const modif_message = async (id) => {
-        setModif(id)
-    }
-
-    /**
-     *
-     * @param id
-     * fonction permettant de liker un message
-     */
-    const likeMessage = async (msg_id, user_id) => {
-        await likeManager({userId: user_id, msgId: msg_id, token: user_logged.token})
-        getMsg()
-    }
-
-    /**
-     *
-     * @param id
-     * fonction permettant d'afficher la modal de modification
-     */
-    const handleOpen = (id) => {
-        messages.map((msg) => {
-            if (msg.id === id) {
-                setModif({
-                    author: msg.author,
-                    message: msg.message,
-                    userId: msg.userId,
-                    id: msg.id,
-                    imageSrc: msg.imageSrc
-                })
-            }
-        })
-        setOpen(true);
-    }
-    /**
-     *
-     * @param id
-     * fonction permettant de fermer la modal de modification
-     */
-    const handleClose = async () => {
-        setsuppresImageModal({suppress: false, name: ""})
-        setNewFileName("")
-        setOpen(false);
-    };
-
-    /**
-     *
-     * @param users
-     * Fonction permettant de savoir si un utilisateur à déj& aimé un message.
-     */
-    const like = (users) => {
-        const arrayOfUsers = users.split(";")
-        let find = false
-        if (arrayOfUsers.length > 0) {
-            arrayOfUsers.map((users) => {
-                if (users === user_logged.user_id.toString()) {
-                    find = true
-                }
-            })
-        }
-        return find
-    }
-
-    /**
-     *
-     * @param e
-     * Fonction permettant de supprimer une image.
-     */
-    const modal_image_suppress = (e) => {
-        e.preventDefault()
-        setsuppresImageModal({suppress: true, name: modif.imageSrc})
-        setModif({...modif, imageSrc: ""})
-    }
-
-    const handleTextModalChange = (event) => {
-        setModif({...modif, message: event.target.value})
-    }
-
 
     useEffect(() => {
         getMsg()
@@ -282,90 +40,25 @@ export default function Content() {
 
     return (
         <div className="content">
-            <aside className="aside"></aside>
+            <Aside />
             <main className="container">
-                <form className="posts_container" method="post" encType="multipart/form-data"
-                      onSubmit={handleSubmit(postMsg)}>
-                    <div className="post_message">
-                        <textarea id="text-area"></textarea>
-                    </div>
-                    <div className="image-post">
-                        <label htmlFor="image_post">Ajouter une image</label>
-                        <input type="file" id="image_post" name="image_post" {...register("imageFile")}
-                               onChange={handleChange}/>
-                        <span id="file-name">{originalFileName}</span>
-                    </div>
-                    <button type="submit" className="new_post">
-                        Poster un message
-                    </button>
-                </form>
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box className="modal">
-                        <form onSubmit={handleSubmit(postModal)}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Modification du message de {modif.author}
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                                <span className="modal_content image-post-modal">
-                                    <img src={modif.imageSrc && `${api.api_public}/images/` + modif.imageSrc}
-                                         alt={modif.imageSrc && "Photo accompagnant le message"}
-                                         className="attachement-modal" id="image-modal"/>
-                                    <label
-                                        htmlFor="image_post_modal">{modif.imageSrc ? "Changer image" : "Ajouter image"}</label>
-                                    <input type="file" id="image_post_modal"
-                                           name="image_post_modal" {...register("imageFileModal")}
-                                           onChange={handleChangeModal}/>
-                                    <span id="file-name">{newFileName}</span>
-                                    {modif.imageSrc &&
-                                        <span className="modal_content_footer">
-                                            <button className="modal_btn" onClick={(e) => modal_image_suppress(e)}>Supprimer l'image</button>
-                                        </span>
-                                    }
-                                    <textarea className="textarea" name="description" id="text_modal"
-                                              value={modif.message} onChange={handleTextModalChange}/>
-                                </span>
-                            </Typography>
-                            <div className="modal_footer">
-                                <Button className="modal_btn" onClick={handleClose}>Annuler</Button>
-                                <Button type="submit" className="modal_btn">Valider</Button>
-                            </div>
-                        </form>
-                    </Box>
-                </Modal>
+                <MessagePost />
                 {messages.map((msg) =>
-                    <div className="card" key={msg.id}>
-                        <div className="card-head">
-                            <p className="font-20">{msg.author}</p>
-                            <i className="font-12 light">{msg.updatedUtcDate}</i>
-                        </div>
-                        <div className="card-content">
-                            {msg.imageSrc && <img src={`${api.api_public}/images/` + msg.imageSrc}
-                                                  alt="Photo accompagnant le message" className="attachement"/>}
-                            <p className="text_message">{msg.message}</p>
-                        </div>
-                        <div className="card-footer">
-                            <p><span className="likeBtn" onClick={(like) => likeMessage(msg.id, user_logged.user_id)}>
-                                {like(msg.usersLiked) ? "👎 Je n'aime plus" : "👍 J'aime"}
-                            </span> ({msg.like})</p>
-                            <div className="btn_footer">
-                                {(msg.userId === user_logged.user_id || user_logged.isAdmin) &&
-                                    <p className="modify footer_btn" onClick={(e) => handleOpen(msg.id)}>Modifier</p>
-                                }
-                                {(msg.userId === user_logged.user_id || user_logged.isAdmin) &&
-                                    <p className="suppress footer_btn"
-                                       onClick={(e) => delete_message(msg.id, msg.imageSrc)}>Supprimer</p>
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <Message key={msg.id}
+                             datas={msg}
+                             messages={messages}
+                             setModif={setModif}
+                             setOpen={setOpen}
+                             users={msg.usersLiked}
+                    />
                 )}
+                <ModalModif modif={modif}
+                            setModif={setModif}
+                            setOpen={setOpen}
+                            open={open}
+                />
             </main>
-            <aside className="aside"></aside>
+            <Aside />
         </div>
     )
 }

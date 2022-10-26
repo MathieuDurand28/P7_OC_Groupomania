@@ -1,0 +1,84 @@
+.content {
+  .card{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    background-color: #FD2D01;
+    width: 95%;
+    margin: 10px 0 10px 0;
+    border: 2px solid whitesmoke;
+    border-radius: 20px;
+    .card-head{
+      border-bottom: 3px solid whitesmoke;
+      font-weight: bold;
+      color: whitesmoke;
+      padding-bottom: 15px;
+      .suppress{
+        color: #FFD7D7;
+        cursor: pointer;
+        &:hover{
+          color: white;
+        }
+      }
+    }
+    .card-content{
+      display: flex;
+      flex-direction: column;
+      color: whitesmoke;
+      .attachement{
+        margin-bottom: 0;
+        max-width: 550px;
+        height: 300px;
+        object-fit: cover;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #FFD7D7;
+      }
+      .text_message{
+        color: #FFD7D7;
+      }
+    }
+    .card-footer{
+      display: flex;
+      flex-direction: column;
+      color: whitesmoke;
+      border-top: 3px solid whitesmoke;
+      .likeBtn{
+        cursor: pointer;
+      }
+      .btn_footer{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        .footer_btn{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: #FFD7D7;
+          color: black;
+          height: 20px;
+          width: 120px;
+          border-radius: 10px;
+          border: #FFD7D7;
+          cursor: pointer;
+          &:hover{
+            background-color: #4E5166;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 870px) {
+  .content{
+    .card{
+      .card-content{
+        .attachement{
+          max-width: 90%;
+          height: 200px;
+        }
+      }
+    }
+  }
+}

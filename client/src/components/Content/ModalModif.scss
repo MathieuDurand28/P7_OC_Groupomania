@@ -1,0 +1,113 @@
+.modal{
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  height: max-content;
+  padding: 25px;
+  background: #FD2D01;
+  color: white;
+  border: 2px solid #000;
+  #modal-modal-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .modal_content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &.image-post-modal{
+      display: flex;
+      flex-direction: column;
+      color: white;
+      margin-top: 10px ;
+      padding: 10px;
+      label{
+        border: 1px solid whitesmoke;
+        padding: 10px;
+        cursor: pointer;
+      }
+      #file-name{
+        margin-top: 5px;
+        color: #FFD7D7;
+      }
+      #image_post_modal{
+        margin-top: 10px;
+        display: none;
+      }
+      .modal_content_footer{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-content: center;
+        padding: 15px;
+      }
+    }
+
+    .attachement-modal{
+      max-width: 350px;
+      max-height: 250px;
+      object-fit: cover;
+      margin: 15px
+    }
+    .textarea{
+      width: 500px;
+      text-align: center;
+      margin: 15px
+    }
+  }
+  .modal_footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 25px;
+  }
+  .modal_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFD7D7;
+    color: black;
+    height: 20px;
+    width: 150px;
+    border-radius: 10px;
+    border: #FFD7D7;
+    cursor: pointer;
+    &:hover{
+      background-color: #4E5166;
+      color: white;
+    }
+  }
+}
+
+
+@media screen and (max-width: 620px) {
+  .modal{
+    width: 80%;
+    height: max-content;
+    justify-content: center;
+    #modal-modal-title{
+      font-size: 4vw;
+    }
+    .modal_content{
+      .textarea{
+        width: 80vw;
+      }
+      &.image-post-modal{
+        #image-modal{
+          width: 90vw;
+        }
+      }
+    }
+    .modal_footer{
+      flex-direction: column;
+      align-items: center;
+    }
+    .modal_btn{
+      margin: 10px
+    }
+  }
+}

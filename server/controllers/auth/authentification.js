@@ -17,10 +17,8 @@ require('dotenv').config()
 exports.adminExist = async function (res,req,next) {
     const adminAlreadyCreated = await User.findOne({ where: { email: process.env.ADMIN_EMAIL } })
     if (adminAlreadyCreated !== null){
-        console.log("deja crééé")
         next()
     } else {
-        console.log("création admin")
         const encryptage = await encrypt(process.env.ADMIN_PASSWORD).then((r) => {return r})
         try {
             await Database.sequelize.authenticate()

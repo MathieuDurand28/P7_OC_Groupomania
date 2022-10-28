@@ -27,9 +27,9 @@
 
 1. éditez le fichier .env_sample pour y indiquer vos informations confidentielles
 2. Renommez le fichier .env_sample en .env
-3. entrer la commande "nodemon start" dans un terminal pour lancer le serveur
-4. si vous possedez déjà une version de la base de données Groupomania, il sufffit de la placer dans le dossier database.
+3. si vous possedez déjà une version de la base de données Groupomania, il sufffit de la placer dans le dossier database.
 ⚠️ Si aucune base de données n'est présente au lancement de l'application. Le systéme créera une base et définira le compte administrateur en se basant sur les informations contenus dans le fichier .env ⚠️
+4. entrer la commande "nodemon start" dans un terminal pour lancer le serveur
 
 ###### <u>Front (client)</u>:
 
